@@ -1,46 +1,48 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+// Comparison function for qsort
+int compare(const void *a, const void *b) {
+    return (*(int*)a - *(int*)b);
+}
 
 int main() {
     int n;
+    // Read the number of elements
+    if (scanf("%d", &n) != 1) {
+        return 1; // Input error
+    }
 
-    // Nhập số lượng phần tử n
-    if (scanf("%d", &n) != 1) return 0;
+    // Handle non-positive array size
+    if (n <= 0) {
+        return 0;
+    }
 
-    int a[n];
-    double tongAm = 0;
-    int demAm = 0;
-    double tongDuong = 0;
-    int demDuong = 0;
+    // Allocate memory on the heap
+    int *a = (int*)malloc(n * sizeof(int));
+    if (a == NULL) {
+        return 1; // Memory allocation failed
+    }
 
-    // Nhập mảng và phân loại số âm, số dương
+    // Read array elements
     for (int i = 0; i < n; i++) {
         scanf("%d", &a[i]);
-        if (a[i] < 0) {
-            tongAm += a[i];
-            demAm++;
-        } else if (a[i] > 0) {
-            tongDuong += a[i];
-            demDuong++;
+    }
+
+    // Sort the array using qsort
+    qsort(a, n, sizeof(int), compare);
+
+    // Print the sorted array
+    for (int i = 0; i < n; i++) {
+        printf("%d", a[i]);
+        if (i < n - 1) {
+            printf(" ");
         }
     }
+    printf("\n"); // Add a final newline for good practice
 
-    // 1. Xử lý Trung bình cộng số âm
-    if (demAm == 0) {
-        printf("Mang khong co so am");
-    } else {
-        double trungBinhAm = tongAm / demAm;
-        printf("%f", trungBinhAm); // %f mặc định in 6 chữ số thập phân
-    }
-
-    // Khoảng cách giữa hai kết quả
-    printf(" ");
-
-    // 2. Xử lý Tổng số dương
-    if (demDuong == 0) {
-        printf("Mang khong co so duong");
-    } else {
-        printf("%f", tongDuong);
-    }
+    // Free the allocated memory
+    free(a);
 
     return 0;
 }
